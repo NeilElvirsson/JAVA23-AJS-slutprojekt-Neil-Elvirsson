@@ -1,0 +1,34 @@
+body {
+    background: yellowgreen;
+}
+
+#root {
+    text-align: center;
+}
+#assignmentDiv {
+    display:flex;
+    padding: 20px;
+    justify-content: space-between;
+    border: 2px solid black;
+    
+}
+
+#todoDiv, #inProgressDiv, #doneDiv {
+
+    flex: 1;
+    margin: 10px;
+    border: 1px solid gray;
+    padding: 10px;
+    background-color: rgb(118, 157, 38);
+}
+
+.ux {
+    background-color:hotpink
+}
+.backend {
+ background-color:darkgray
+}
+
+.frontend {
+    background-color:cyan;
+}
