@@ -30,6 +30,7 @@ export function App() {
                     const data = snapshot.val();
                     const fetchedTasks = Object.entries(data).map(([id, task]) => ({ id, ...task }));
                     
+                    
                     console.log(fetchedTasks);
 
                     setTasks(fetchedTasks);
@@ -48,17 +49,15 @@ export function App() {
     const addTask = async (task) => {
 
         try {
-            console.log('Database ref:', database)
-            const db = database;
-
+          
             console.log('Task to be added', task)
             const newTaskRef = push(ref(db, 'Assignment'));
 
             console.log('new task ref', newTaskRef)
             await set(newTaskRef, task);
 
+            setTasks(prevTasks => [...prevTasks, { ...task, id: newTaskRef.key }]);
             console.log('task added successfully')
-            setTasks([...tasks, { ...task, id: newTaskRef.key }]);
 
         } catch (error) {
             console.error('Error adding task mah boy:', error)
@@ -69,10 +68,12 @@ export function App() {
     const updateTask = async (updatedTask) => {
 
         try {
-            const db = database;
-            const taskRef = ref(db, `Assignment/${updatedTask.id}`);
+            
+            const taskRef = ref(database, `Assignment/${updatedTask.id}`);
             await update(taskRef, updatedTask);
-            setTasks(tasks.map(task => task.id === updatedTask.id ? updatedTask : task));
+            setTasks(prevTasks => prevTasks.map(task => task.id === updatedTask.id ? updatedTask : task));
+            console.log('task updated successfully');
+            
         } catch (error) {
             console.error('Error updating task:', error)
         }
@@ -89,7 +90,7 @@ export function App() {
 
 
             <div id="assignmentDiv">
-                <TodoCard tasks={tasks.filter(task => task.status === 'To Do')} />
+                <TodoCard tasks={tasks.filter(task => task.status === 'To Do')} updateTask={updateTask} />
                 <InProgressCard tasks={tasks.filter(task => task.status === 'In Progress')} />
                 <DoneCard tasks={tasks.filter(task => task.status === 'Done')} />
 

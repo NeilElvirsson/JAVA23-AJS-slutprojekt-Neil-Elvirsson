@@ -1,6 +1,10 @@
 body {
     background: yellowgreen;
 }
+p, h1, h2, h3, h4 {
+    font-family: monospace, Arial, Helvetica, sans-serif;
+}
+
 
 #root {
     text-align: center;

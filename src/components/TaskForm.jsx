@@ -12,15 +12,6 @@ export function TaskForm({addTask}) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-         /*   const db = database;
-
-            await push(ref(db, 'Assignment'), {
-                assignment: assignment,
-                category: category,
-                status: 'In Progress',
-                name: name,
-            });*/
-
            const newTask = {
 
             assignment: assignment,
