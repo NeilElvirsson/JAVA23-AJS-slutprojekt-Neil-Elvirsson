@@ -17,18 +17,34 @@ body {
 
     flex: 1;
     margin: 10px;
-    border: 1px solid gray;
+    border: 2px solid black;
     padding: 10px;
     background-color: rgb(118, 157, 38);
+}
+.task-container {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.task-container.ux {
+    background-color:hotpink
+}
+.task-container.backend {
+ background-color:darkgray
+}
+
+.task-container.frontend {
+    background-color:cyan;
 }
 
 .ux {
     background-color:hotpink
 }
 .backend {
- background-color:darkgray
-}
-
-.frontend {
+    background-color:darkgray
+   }
+  .frontend {
     background-color:cyan;
 }
