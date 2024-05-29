@@ -3,6 +3,7 @@ body {
 }
 p, h1, h2, h3, h4 {
     font-family: monospace, Arial, Helvetica, sans-serif;
+    
 }
 
 
@@ -13,7 +14,10 @@ p, h1, h2, h3, h4 {
     display:flex;
     padding: 20px;
     justify-content: space-between;
-    border: 2px solid black;
+    border: 5px solid black;
+    border-radius: 5px;
+   
+    
     
 }
 
@@ -24,6 +28,8 @@ p, h1, h2, h3, h4 {
     border: 2px solid black;
     padding: 10px;
     background-color: rgb(118, 157, 38);
+    border-radius: 5px;
+    
 }
 .task-container {
     border: 1px solid black;

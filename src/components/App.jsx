@@ -8,12 +8,12 @@ import { get } from "firebase/database";
 import { push } from "firebase/database";
 import { update } from "firebase/database";
 import "../css/style.css";
-import TodoTask from "./FetchData";
+import { remove } from "firebase/database";
 import { useEffect } from "react";
 import { useState } from "react";
 import { set } from "firebase/database";
 import { StatusCardFetch } from "./StatusCard";
-import { FetchData } from "./FetchData";
+
 
 
 
@@ -29,8 +29,8 @@ export function App() {
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     const fetchedTasks = Object.entries(data).map(([id, task]) => ({ id, ...task }));
-                    
-                    
+
+
                     console.log(fetchedTasks);
 
                     setTasks(fetchedTasks);
@@ -49,9 +49,9 @@ export function App() {
     const addTask = async (task) => {
 
         try {
-          
+
             console.log('Task to be added', task)
-            const newTaskRef = push(ref(db, 'Assignment'));
+            const newTaskRef = push(ref(database, 'Assignment'));
 
             console.log('new task ref', newTaskRef)
             await set(newTaskRef, task);
@@ -68,16 +68,40 @@ export function App() {
     const updateTask = async (updatedTask) => {
 
         try {
-            
+
             const taskRef = ref(database, `Assignment/${updatedTask.id}`);
             await update(taskRef, updatedTask);
             setTasks(prevTasks => prevTasks.map(task => task.id === updatedTask.id ? updatedTask : task));
             console.log('task updated successfully');
-            
+
         } catch (error) {
             console.error('Error updating task:', error)
         }
     };
+
+    
+    const markTaskAsDone = async (task) => {
+
+        console.log("Marking task as done:", task);
+
+        const updatedTask = { ...task, status: 'Done' };
+        await updateTask(updatedTask);
+
+
+    };
+
+    const removeTask = async (task) => {
+        try {
+            const taskRef = ref(database, `Assignment/${task.id}`);
+            await remove(taskRef);
+            setTasks(prevTasks => prevTasks.filter(t => t.id !== task.id));
+
+        } catch (error) {
+            console.error('Error removing task: ', error);
+
+        }
+
+    }
 
 
     return (
@@ -91,8 +115,8 @@ export function App() {
 
             <div id="assignmentDiv">
                 <TodoCard tasks={tasks.filter(task => task.status === 'To Do')} updateTask={updateTask} />
-                <InProgressCard tasks={tasks.filter(task => task.status === 'In Progress')} />
-                <DoneCard tasks={tasks.filter(task => task.status === 'Done')} />
+                <InProgressCard tasks={tasks.filter(task => task.status === 'In Progress')} markTaskAsDone={markTaskAsDone} />
+                <DoneCard tasks={tasks.filter(task => task.status === 'Done')} removeTask={removeTask} />
 
             </div>
 
