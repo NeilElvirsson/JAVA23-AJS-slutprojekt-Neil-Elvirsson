@@ -12,16 +12,15 @@ import { remove } from "firebase/database";
 import { useEffect } from "react";
 import { useState } from "react";
 import { set } from "firebase/database";
-import { StatusCardFetch } from "./StatusCard";
 
-
-
-
+// Initializes the application component
+// Fetches tasks from the database when the component mounts
 export function App() {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
         console.log('Fetched tasks MF!: ', tasks)
+
         const fetchTasks = async () => {
             const tasksRef = ref(database, 'Assignment');
             try {
@@ -39,13 +38,13 @@ export function App() {
                 }
             } catch (error) {
                 console.error('Error fetching tasks', error);
+
             }
         };
         fetchTasks();
     }, []);
 
-
-
+    // This asynchronous function adds a new task to the database, sets status to 'To do'
     const addTask = async (task) => {
 
         try {
@@ -60,11 +59,13 @@ export function App() {
             console.log('task added successfully')
 
         } catch (error) {
-            console.error('Error adding task mah boy:', error)
+            console.error('Error adding task:', error)
+            alert('There was an error adding task');
 
         }
     };
 
+    //This asynchronous function updates the task, sets status to 'In Progress'
     const updateTask = async (updatedTask) => {
 
         try {
@@ -76,20 +77,24 @@ export function App() {
 
         } catch (error) {
             console.error('Error updating task:', error)
+            alert('There was an error updating task');
         }
     };
 
-    
+    //asynchronous function that marks task as done, sets status to 'Done'
     const markTaskAsDone = async (task) => {
+        try {
+            const updatedTask = { ...task, status: 'Done' };
+            await updateTask(updatedTask);
 
-        console.log("Marking task as done:", task);
+        } catch (error) {
 
-        const updatedTask = { ...task, status: 'Done' };
-        await updateTask(updatedTask);
-
-
+            console.error('Error marking task as done');
+            alert('There was an error marking task as done');
+        }
     };
 
+    //Function that removes task from database
     const removeTask = async (task) => {
         try {
             const taskRef = ref(database, `Assignment/${task.id}`);
@@ -98,20 +103,17 @@ export function App() {
 
         } catch (error) {
             console.error('Error removing task: ', error);
-
+            alert('There was an error removing task');
         }
-
     }
 
-
+    // Renders the main application components, including task forms and status cards
     return (
         <div>
             <div id="addTaskDiv">
-                <h1 className="titletext">ScrumBoard</h1>
+                <h1 className="titletext">Scrum Board</h1>
                 <TaskForm addTask={addTask} />
-
             </div>
-
 
             <div id="assignmentDiv">
                 <TodoCard tasks={tasks.filter(task => task.status === 'To Do')} updateTask={updateTask} />
@@ -119,11 +121,6 @@ export function App() {
                 <DoneCard tasks={tasks.filter(task => task.status === 'Done')} removeTask={removeTask} />
 
             </div>
-
         </div>
-
-
-
-
     );
 }

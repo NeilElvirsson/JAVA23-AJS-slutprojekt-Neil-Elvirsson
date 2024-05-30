@@ -1,9 +1,6 @@
-import { Database } from "firebase/database";
 import { useState } from "react";
-import { getDatabase, ref, push } from "firebase/database";
-import { database } from "../modules/firebaseConfig";
-import { set } from "firebase/database";
 
+//Function that handles new task form, adds task to list and database on form submission
 export function TaskForm({addTask}) {
 
     const [assignment, setAssignment] = useState('');
@@ -33,11 +30,12 @@ export function TaskForm({addTask}) {
             console.log('Error adding task:', error)
         }
     };
+    // Allows user to input task details and submit to add new task
     return (
         <div id="formDiv">
             <form onSubmit={handleSubmit}>
                 <input type="text" value={assignment} onChange={(event) => setAssignment(event.target.value)}
-                    placeholder="Enter a new task" />
+                    placeholder="Enter a new task" required/>
 
                 <select value={category} onChange={(event) => setCategory(event.target.value)}>
                     <option value="ux">UX</option>

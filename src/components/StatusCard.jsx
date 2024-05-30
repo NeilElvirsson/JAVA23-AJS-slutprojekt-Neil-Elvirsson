@@ -1,21 +1,22 @@
-
-import { useEffect } from "react";
 import { useState } from "react";
-import { Database } from "firebase/database";
-import { ref } from "firebase/database";
-import { get } from "firebase/database";
-import { remove } from "firebase/database";
 
+//Layout for the webbpage(static version)
+// This function is for displaying and fetching our tasks, it updates the task and handles the name fields.
 export function TodoCard({ tasks = [], updateTask }) {
 
-    const [name, setName] = useState('');
+    const [nameInputs, setNameInputs] = useState({});
 
     const handleAddName = (task) => {
-        const updatedTask = { ...task, status: 'In Progress', name: name };
+        const updatedTask = { ...task, status: 'In Progress', name: nameInputs[task.id] || '' };
         updateTask(updatedTask);
-        setName('');
+        setNameInputs(prev => ({ ...prev, [task.id]: '' }));
+    };
+    const handleInputChange = (taskId, value) => {
+        setNameInputs(prev => ({ ...prev, [taskId]: value }));
     };
 
+// Renders "To do" tasks with assignment form
+// This function updates task status to "In Progress" on form submit and handles name input change
 
     return (
         <div id="todoDiv">
@@ -27,8 +28,8 @@ export function TodoCard({ tasks = [], updateTask }) {
                         <p>Category: {task.category}</p>
                         <p>Status: {task.status}</p>
                         <form onSubmit={(event) => { event.preventDefault(); handleAddName(task); }}>
-                            <input type="text" value={name} onChange={(event) => setName(event.target.value)} placeholder="Enter your name" />
-                            <button id="nameBtn">Add {">"}{">"}</button>
+                            <input type="text" value={nameInputs[task.id] || ''} onChange={(event) => handleInputChange(task.id, event.target.value)} placeholder="Enter your name" required />
+                            <button id="nameBtn">Assign {">"}{">"}</button>
                         </form>
                     </div>
                 ))
@@ -38,6 +39,8 @@ export function TodoCard({ tasks = [], updateTask }) {
         </div>
     );
 }
+
+// This function renders "In Progress" tasks and Marks task as "Done" on button click
 
 export function InProgressCard({ tasks = [], markTaskAsDone }) {
     return (
@@ -60,7 +63,7 @@ export function InProgressCard({ tasks = [], markTaskAsDone }) {
         </div>
     );
 }
-
+//function thats renders done tasks, remove task from list and database on button click
 export function DoneCard({ tasks = [], removeTask }) {
 
     console.log("RemoveTask in DoneCard", removeTask);
